@@ -2,13 +2,20 @@
 # Code For Princeton: Open Data Workshop
 Files and links necessary for the open data workshop
 
-## Data sources
-
-## OpenRefine data
+## Data files
 
 Data from Jersey City Data Page: [Original link](http://www.cityofjerseycity.com/uploadedFiles/Data/JCPD%20Calls%20for%20Service%202014(1).xlsx) , [Mirror](https://github.com/BobString/open-data-workshop-CfP/blob/master/data/OriginalJCPDCallsforService2014.xlsx?raw=true)
 
 Data in CSV format: [Link](https://raw.githubusercontent.com/BobString/open-data-workshop-CfP/master/data/OriginalJCPD2014.csv)
+
+Cleaned data: [Link](https://raw.githubusercontent.com/BobString/open-data-workshop-CfP/master/data/OriginalJCPD2014.csv)
+
+CartoDB map: [http://cdb.io/1ehU4NB](http://cdb.io/1ehU4NB)
+
+
+## OpenRefine data
+
+
 
 
 ### Geocoding
@@ -23,11 +30,12 @@ Data in CSV format: [Link](https://raw.githubusercontent.com/BobString/open-data
 
 Source: [Paul Bartsch GitHub](https://gist.github.com/pdbartsch/5987932)
 
-### Date conversion
+### Date conversion (not used)
 
 1. Transform Time Received and Time Dispached columns with `toDate(value,"MM/dd/yyyy H:m:s").toString("yyyy-dd-MM HH:mm:ss").replace(" ","T")` to adapt it to the date format in CartoDb
 
-### Complete recepie
+
+### Complete recipe
 
 ```json
 [
@@ -235,35 +243,36 @@ Source: [Paul Bartsch GitHub](https://gist.github.com/pdbartsch/5987932)
     "index": 3
   },
   {
-    "op": "core/text-transform",
-    "description": "Text transform on cells in column Time Received using expression grel:toDate(value,\"MM/dd/yyyy H:m:s\").toString(\"yyyy-dd-MM HH:mm:ss\").replace(\" \",\"T\")",
-    "engineConfig": {
-      "facets": [],
-      "mode": "row-based"
-    },
-    "columnName": "Time Received",
-    "expression": "grel:toDate(value,\"MM/dd/yyyy H:m:s\").toString(\"yyyy-dd-MM HH:mm:ss\").replace(\" \",\"T\")",
-    "onError": "set-to-blank",
-    "repeat": false,
-    "repeatCount": 10
-  },
-  {
-    "op": "core/text-transform",
-    "description": "Text transform on cells in column Time Dispatched using expression grel:toDate(value,\"MM/dd/yyyy H:m:s\").toString(\"yyyy-dd-MM HH:mm:ss\").replace(\" \",\"T\")",
-    "engineConfig": {
-      "facets": [],
-      "mode": "row-based"
-    },
-    "columnName": "Time Dispatched",
-    "expression": "grel:toDate(value,\"MM/dd/yyyy H:m:s\").toString(\"yyyy-dd-MM HH:mm:ss\").replace(\" \",\"T\")",
-    "onError": "keep-original",
-    "repeat": false,
-    "repeatCount": 10
-  },
-  {
     "op": "core/column-removal",
     "description": "Remove column JSON Response",
     "columnName": "JSON Response"
+  },
+  {
+    "op": "core/column-split",
+    "description": "Split column Lat & Lon by separator",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Lat & Lon",
+    "guessCellType": true,
+    "removeOriginalColumn": true,
+    "mode": "separator",
+    "separator": ",",
+    "regex": false,
+    "maxColumns": 0
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Lat & Lon 1 to lat",
+    "oldColumnName": "Lat & Lon 1",
+    "newColumnName": "lat"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Lat & Lon 2 to lon",
+    "oldColumnName": "Lat & Lon 2",
+    "newColumnName": "lon"
   }
 ]
 ``` 
