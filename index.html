@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Open-data-workshop-cfp by BobString</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Open-data-workshop-cfp</h1>
+        <h2>Files and links necessary for the open data workshop</h2>
+        <a href="https://github.com/BobString/open-data-workshop-CfP" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="code-for-princeton-open-data-workshop" class="anchor" href="#code-for-princeton-open-data-workshop" aria-hidden="true"><span class="octicon octicon-link"></span></a>Code For Princeton: Open Data Workshop</h1>
+
+<p>Files and links necessary for the open data workshop</p>
+
+<h2>
+<a id="data-files" class="anchor" href="#data-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data files</h2>
+
+<p>Data from Jersey City Data Page: <a href="http://www.cityofjerseycity.com/uploadedFiles/Data/JCPD%20Calls%20for%20Service%202014(1).xlsx">Original link</a> , <a href="https://github.com/BobString/open-data-workshop-CfP/blob/master/data/OriginalJCPDCallsforService2014.xlsx?raw=true">Mirror</a></p>
+
+<p>Data in CSV format: <a href="https://raw.githubusercontent.com/BobString/open-data-workshop-CfP/master/data/OriginalJCPD2014.csv">Link</a></p>
+
+<p>Dataset after OpenRefine recipe: <a href="https://raw.githubusercontent.com/BobString/open-data-workshop-CfP/master/data/CLEANJCPD2014v1.csv">Link</a></p>
+
+<p>CartoDB map: <a href="http://cdb.io/1ehU4NB">http://cdb.io/1ehU4NB</a></p>
+
+<h2>
+<a id="openrefine" class="anchor" href="#openrefine" aria-hidden="true"><span class="octicon octicon-link"></span></a>OpenRefine</h2>
+
+<p>Some snippets used in OpenRefine</p>
+
+<h3>
+<a id="geocoding" class="anchor" href="#geocoding" aria-hidden="true"><span class="octicon octicon-link"></span></a>Geocoding</h3>
+
+<ol>
+<li>Starting with a single address field <code>Edit Column &gt; Add Column by Fetching URLs</code> Nominatim has a limit of 1 geocode per second so make sure to set the throttle delay to greater than 1000 milliseconds Fetch URL based on column (quotes needed):</li>
+</ol>
+
+<p><code>"http://nominatim.openstreetmap.org/search?format=json&amp;email='EMAIL'&amp;app=google-refine&amp;q='" + escape(value, 'url')</code></p>
+
+<ol>
+<li>Extract lat/lon from newly created JSON column <code>Edit Column &gt; Add Column based on This Column</code>. Parse the JSON and concatenate latitude, longitude:</li>
+</ol>
+
+<p><code>with(value.parseJson()[0], pair, pair.lat + ',' + pair.lon)</code></p>
+
+<p>Source: <a href="https://gist.github.com/pdbartsch/5987932">Paul Bartsch GitHub</a></p>
+
+<h3>
+<a id="date-conversion-not-used" class="anchor" href="#date-conversion-not-used" aria-hidden="true"><span class="octicon octicon-link"></span></a>Date conversion (not used)</h3>
+
+<ol>
+<li>Transform Time Received and Time Dispached columns with <code>toDate(value,"MM/dd/yyyy H:m:s").toString("yyyy-dd-MM HH:mm:ss").replace(" ","T")</code> to adapt it to the date format in CartoDb</li>
+</ol>
+
+<h3>
+<a id="complete-recipe" class="anchor" href="#complete-recipe" aria-hidden="true"><span class="octicon octicon-link"></span></a>Complete recipe</h3>
+
+<div class="highlight highlight-json"><pre>[
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-removal<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Remove column Column<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Column<span class="pl-pds">"</span></span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-removal<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Remove column Column2<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Column2<span class="pl-pds">"</span></span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-split<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Split column Call Code Description by separator<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>engineConfig<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>facets<span class="pl-pds">"</span></span>: [],
+      <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>row-based<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Call Code Description<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>guessCellType<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>removeOriginalColumn<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>separator<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>separator<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>;<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>regex<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>maxColumns<span class="pl-pds">"</span></span>: <span class="pl-c1">0</span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/row-removal<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Remove rows<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>engineConfig<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>facets<span class="pl-pds">"</span></span>: [
+        {
+          <span class="pl-s"><span class="pl-pds">"</span>expression<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>value<span class="pl-pds">"</span></span>,
+          <span class="pl-s"><span class="pl-pds">"</span>invert<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>,
+          <span class="pl-s"><span class="pl-pds">"</span>selectError<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+          <span class="pl-s"><span class="pl-pds">"</span>omitError<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+          <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Call Code Description 1<span class="pl-pds">"</span></span>,
+          <span class="pl-s"><span class="pl-pds">"</span>selectBlank<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+          <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Call Code Description 1<span class="pl-pds">"</span></span>,
+          <span class="pl-s"><span class="pl-pds">"</span>omitBlank<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+          <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>list<span class="pl-pds">"</span></span>,
+          <span class="pl-s"><span class="pl-pds">"</span>selection<span class="pl-pds">"</span></span>: [
+            {
+              <span class="pl-s"><span class="pl-pds">"</span>v<span class="pl-pds">"</span></span>: {
+                <span class="pl-s"><span class="pl-pds">"</span>v<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>HYDRANT PARKING VIOLATION<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>l<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>HYDRANT PARKING VIOLATION<span class="pl-pds">"</span></span>
+              }
+            }
+          ]
+        }
+      ],
+      <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>row-based<span class="pl-pds">"</span></span>
+    }
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-removal<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Remove column Call Code Description 3<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Call Code Description 3<span class="pl-pds">"</span></span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-removal<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Remove column Call Code Description 2<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Call Code Description 2<span class="pl-pds">"</span></span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-removal<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Remove column Is Primary<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Is Primary<span class="pl-pds">"</span></span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/mass-edit<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Mass edit cells in column Address<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>engineConfig<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>facets<span class="pl-pds">"</span></span>: [],
+      <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>row-based<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Address<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>expression<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>value<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>edits<span class="pl-pds">"</span></span>: [
+      {
+        <span class="pl-s"><span class="pl-pds">"</span>fromBlank<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>fromError<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>from<span class="pl-pds">"</span></span>: [
+          <span class="pl-s"><span class="pl-pds">"</span>third (3RD ST) &amp; COLES ST;  <span class="pl-pds">"</span></span>
+        ],
+        <span class="pl-s"><span class="pl-pds">"</span>to<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>3RD ST &amp; COLES ST;  <span class="pl-pds">"</span></span>
+      }
+    ]
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/mass-edit<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Mass edit cells in column Address<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>engineConfig<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>facets<span class="pl-pds">"</span></span>: [],
+      <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>row-based<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Address<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>expression<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>value<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>edits<span class="pl-pds">"</span></span>: [
+      {
+        <span class="pl-s"><span class="pl-pds">"</span>fromBlank<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>fromError<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>from<span class="pl-pds">"</span></span>: [
+          <span class="pl-s"><span class="pl-pds">"</span>glennwood ave (GLENWOOD AVE) &amp; KENNEDY BLVD;  <span class="pl-pds">"</span></span>
+        ],
+        <span class="pl-s"><span class="pl-pds">"</span>to<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>GLENWOOD AVE &amp; KENNEDY BLVD;  <span class="pl-pds">"</span></span>
+      }
+    ]
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/text-transform<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Text transform on cells in column Address using expression value.trim()<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>engineConfig<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>facets<span class="pl-pds">"</span></span>: [],
+      <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>row-based<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Address<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>expression<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>value.trim()<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>onError<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>keep-original<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>repeat<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>repeatCount<span class="pl-pds">"</span></span>: <span class="pl-c1">10</span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/text-transform<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Text transform on cells in column Address using expression grel:value.replace(<span class="pl-cce">\"</span>;<span class="pl-cce">\"</span>,<span class="pl-cce">\"\"</span>)<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>engineConfig<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>facets<span class="pl-pds">"</span></span>: [],
+      <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>row-based<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Address<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>expression<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>grel:value.replace(<span class="pl-cce">\"</span>;<span class="pl-cce">\"</span>,<span class="pl-cce">\"\"</span>)<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>onError<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>keep-original<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>repeat<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>repeatCount<span class="pl-pds">"</span></span>: <span class="pl-c1">10</span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/text-transform<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Text transform on cells in column Address using expression value.toTitlecase()<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>engineConfig<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>facets<span class="pl-pds">"</span></span>: [],
+      <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>row-based<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Address<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>expression<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>value.toTitlecase()<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>onError<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>keep-original<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>repeat<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>repeatCount<span class="pl-pds">"</span></span>: <span class="pl-c1">10</span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/text-transform<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Text transform on cells in column Address using expression grel:value + <span class="pl-cce">\"</span>, Jersey City, New Jersey, USA<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>engineConfig<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>facets<span class="pl-pds">"</span></span>: [],
+      <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>row-based<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Address<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>expression<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>grel:value + <span class="pl-cce">\"</span>, Jersey City, New Jersey, USA<span class="pl-cce">\"</span><span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>onError<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>keep-original<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>repeat<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>repeatCount<span class="pl-pds">"</span></span>: <span class="pl-c1">10</span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-removal<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Remove column CITY<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>CITY<span class="pl-pds">"</span></span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-addition-by-fetching-urls<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Create column JSON Response at index 12 by fetching URLs based on column Address using expression grel:<span class="pl-cce">\"</span>http://nominatim.openstreetmap.org/search?format=json&amp;email='contact@robertmm.com'&amp;app=google-refine&amp;q='<span class="pl-cce">\"</span> + escape(value, 'url')<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>engineConfig<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>facets<span class="pl-pds">"</span></span>: [],
+      <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>row-based<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>newColumnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>JSON Response<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>columnInsertIndex<span class="pl-pds">"</span></span>: <span class="pl-c1">12</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>baseColumnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Address<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>urlExpression<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>grel:<span class="pl-cce">\"</span>http://nominatim.openstreetmap.org/search?format=json&amp;email='contact@robertmm.com'&amp;app=google-refine&amp;q='<span class="pl-cce">\"</span> + escape(value, 'url')<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>onError<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>set-to-blank<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>delay<span class="pl-pds">"</span></span>: <span class="pl-c1">2000</span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-addition<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Create column Lat &amp; Lon at index 13 based on column JSON Response using expression grel:with(value.parseJson()[0], pair, pair.lat + ',' + pair.lon)<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>engineConfig<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>facets<span class="pl-pds">"</span></span>: [],
+      <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>row-based<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>newColumnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Lat &amp; Lon<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>columnInsertIndex<span class="pl-pds">"</span></span>: <span class="pl-c1">13</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>baseColumnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>JSON Response<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>expression<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>grel:with(value.parseJson()[0], pair, pair.lat + ',' + pair.lon)<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>onError<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>set-to-blank<span class="pl-pds">"</span></span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-removal<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Remove column Time Arrived<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Time Arrived<span class="pl-pds">"</span></span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-move<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Move column Time Dispatched to position 3<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Time Dispatched<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>index<span class="pl-pds">"</span></span>: <span class="pl-c1">3</span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-removal<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Remove column JSON Response<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>JSON Response<span class="pl-pds">"</span></span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-split<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Split column Lat &amp; Lon by separator<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>engineConfig<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>facets<span class="pl-pds">"</span></span>: [],
+      <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>row-based<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>columnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Lat &amp; Lon<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>guessCellType<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>removeOriginalColumn<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>mode<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>separator<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>separator<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>,<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>regex<span class="pl-pds">"</span></span>: <span class="pl-c1">false</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>maxColumns<span class="pl-pds">"</span></span>: <span class="pl-c1">0</span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-rename<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Rename column Lat &amp; Lon 1 to lat<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>oldColumnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Lat &amp; Lon 1<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>newColumnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>lat<span class="pl-pds">"</span></span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>op<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>core/column-rename<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Rename column Lat &amp; Lon 2 to lon<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>oldColumnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Lat &amp; Lon 2<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>newColumnName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>lon<span class="pl-pds">"</span></span>
+  }
+]</pre></div>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/BobString/open-data-workshop-CfP/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/BobString/open-data-workshop-CfP/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/BobString/open-data-workshop-CfP"></a> is maintained by <a href="https://github.com/BobString">BobString</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
