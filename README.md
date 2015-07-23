@@ -8,15 +8,14 @@ Data from Jersey City Data Page: [Original link](http://www.cityofjerseycity.com
 
 Data in CSV format: [Link](https://raw.githubusercontent.com/BobString/open-data-workshop-CfP/master/data/OriginalJCPD2014.csv)
 
-Cleaned data: [Link](https://raw.githubusercontent.com/BobString/open-data-workshop-CfP/master/data/OriginalJCPD2014.csv)
+Dataset after OpenRefine recipe: [Link](https://raw.githubusercontent.com/BobString/open-data-workshop-CfP/master/data/CLEANJCPD2014v1.csv)
 
 CartoDB map: [http://cdb.io/1ehU4NB](http://cdb.io/1ehU4NB)
 
 
-## OpenRefine data
+## OpenRefine
 
-
-
+Some snippets used in OpenRefine
 
 ### Geocoding
 
