@@ -2,6 +2,8 @@
 # Code For Princeton: Open Data Workshop
 Files and links necessary for the open data workshop
 
+Presentation [Link](https://github.com/BobString/open-data-workshop-CfP/raw/master/OpenDataworkshop.pdf)
+
 ## Data files
 
 Data from Jersey City Data Page: [Original link](http://www.cityofjerseycity.com/uploadedFiles/Data/JCPD%20Calls%20for%20Service%202014(1).xlsx) , [Mirror](https://github.com/BobString/open-data-workshop-CfP/blob/master/data/OriginalJCPDCallsforService2014.xlsx?raw=true)
