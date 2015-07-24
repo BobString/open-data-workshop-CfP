@@ -3,6 +3,7 @@
 Files and links necessary for the open data workshop
 
 Presentation [Link](https://github.com/BobString/open-data-workshop-CfP/raw/master/OpenDataworkshop.pdf)
+OPRA logs [2014](https://github.com/BobString/open-data-workshop-CfP/raw/master/data/OPRALogs2014.pdf), [2015](https://github.com/BobString/open-data-workshop-CfP/raw/master/data/OPRALogs2015.pdf) 
 
 ## Data files
 
